@@ -1,373 +1,107 @@
 {
-  "id": "00000000-0000-0000-0000-000000000000",
-  "revision": 0,
-  "last_node_id": 7,
-  "last_link_id": 18,
-  "nodes": [
-    {
-      "id": 1,
-      "type": "CheckpointLoaderSimple",
-      "pos": [
-        -638.4414687298217,
-        14.785545894685015
-      ],
-      "size": [
-        270,
-        107.00002346857383
-      ],
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            12
-          ]
-        },
-        {
-          "name": "CLIP",
-          "type": "CLIP",
-          "links": [
-            10,
-            11
-          ]
-        },
-        {
-          "name": "VAE",
-          "type": "VAE",
-          "links": [
-            17
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CheckpointLoaderSimple"
-      },
-      "widgets_values": [
-        "{{CHECKPOINT}}"
-      ]
+  "1": {
+    "inputs": {
+      "ckpt_name": "{{CHECKPOINT}}"
     },
-    {
-      "id": 2,
-      "type": "CLIPTextEncode",
-      "pos": [
-        -135.95914978789347,
-        17.178318842027522
-      ],
-      "size": [
-        400,
-        200
-      ],
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 10
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            13
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        "{{POSITIVE_PROMPT}}"
-      ]
-    },
-    {
-      "id": 3,
-      "type": "CLIPTextEncode",
-      "pos": [
-        -135.95914978789347,
-        356.9520773646648
-      ],
-      "size": [
-        400,
-        200
-      ],
-      "flags": {},
-      "order": 3,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "clip",
-          "type": "CLIP",
-          "link": 11
-        }
-      ],
-      "outputs": [
-        {
-          "name": "CONDITIONING",
-          "type": "CONDITIONING",
-          "links": [
-            14
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "CLIPTextEncode"
-      },
-      "widgets_values": [
-        "{{NEGATIVE_PROMPT}}"
-      ]
-    },
-    {
-      "id": 4,
-      "type": "EmptyLatentImage",
-      "pos": [
-        -636.0486977139806,
-        277.9905772334631
-      ],
-      "size": [
-        270,
-        144
-      ],
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            15
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "EmptyLatentImage"
-      },
-      "widgets_values": [
-        null,
-        null,
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "2": {
+    "inputs": {
+      "text": "POSITIVE_PROMPT",
+      "clip": [
+        "1",
         1
       ]
     },
-    {
-      "id": 5,
-      "type": "KSampler",
-      "pos": [
-        512.482317010427,
-        17.178325973129006
-      ],
-      "size": [
-        270,
-        317.3125
-      ],
-      "flags": {},
-      "order": 4,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 12
-        },
-        {
-          "name": "positive",
-          "type": "CONDITIONING",
-          "link": 13
-        },
-        {
-          "name": "negative",
-          "type": "CONDITIONING",
-          "link": 14
-        },
-        {
-          "name": "latent_image",
-          "type": "LATENT",
-          "link": 15
-        }
-      ],
-      "outputs": [
-        {
-          "name": "LATENT",
-          "type": "LATENT",
-          "links": [
-            16
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "KSampler"
-      },
-      "widgets_values": [
-        null,
-        "randomize",
-        null,
-        null,
-        "{{SAMPLER}}",
-        "{{SCHEDULER}}",
-        null
-      ]
-    },
-    {
-      "id": 6,
-      "type": "VAEDecode",
-      "pos": [
-        873.1384595504637,
-        16.6084397854479
-      ],
-      "size": [
-        140,
-        46
-      ],
-      "flags": {},
-      "order": 5,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "samples",
-          "type": "LATENT",
-          "link": 16
-        },
-        {
-          "name": "vae",
-          "type": "VAE",
-          "link": 17
-        }
-      ],
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            18
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "VAEDecode"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 7,
-      "type": "SaveImage",
-      "pos": [
-        1165.211847844437,
-        15.276698178526885
-      ],
-      "size": [
-        270,
-        84
-      ],
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 18
-        }
-      ],
-      "outputs": [],
-      "properties": {},
-      "widgets_values": [
-        "ComfyInject"
-      ]
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
     }
-  ],
-  "links": [
-    [
-      10,
-      1,
-      1,
-      2,
-      0,
-      "CLIP"
-    ],
-    [
-      11,
-      1,
-      1,
-      3,
-      0,
-      "CLIP"
-    ],
-    [
-      12,
-      1,
-      0,
-      5,
-      0,
-      "MODEL"
-    ],
-    [
-      13,
-      2,
-      0,
-      5,
-      1,
-      "CONDITIONING"
-    ],
-    [
-      14,
-      3,
-      0,
-      5,
-      2,
-      "CONDITIONING"
-    ],
-    [
-      15,
-      4,
-      0,
-      5,
-      3,
-      "LATENT"
-    ],
-    [
-      16,
-      5,
-      0,
-      6,
-      0,
-      "LATENT"
-    ],
-    [
-      17,
-      1,
-      2,
-      6,
-      1,
-      "VAE"
-    ],
-    [
-      18,
-      6,
-      0,
-      7,
-      0,
-      "IMAGE"
-    ]
-  ],
-  "groups": [],
-  "config": {},
-  "extra": {
-    "ds": {
-      "scale": 0.3799319572300298,
-      "offset": [
-        940.4268018657834,
-        860.6441071573228
+  },
+  "3": {
+    "inputs": {
+      "text": "NEGATIVE_PROMPT",
+      "clip": [
+        "1",
+        1
       ]
     },
-    "frontendVersion": "1.39.19"
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
   },
-  "version": 0.4
+  "4": {
+    "inputs": {
+      "width": null,
+      "height": null,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "5": {
+    "inputs": {
+      "seed": null,
+      "steps": null,
+      "cfg": null,
+      "sampler_name": "{{SAMPLER}}",
+      "scheduler": "{{SCHEDULER}}",
+      "denoise": null,
+      "model": [
+        "1",
+        0
+      ],
+      "positive": [
+        "2",
+        0
+      ],
+      "negative": [
+        "3",
+        0
+      ],
+      "latent_image": [
+        "4",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "6": {
+    "inputs": {
+      "samples": [
+        "5",
+        0
+      ],
+      "vae": [
+        "1",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "7": {
+    "inputs": {
+      "filename_prefix": "ComfyInject",
+      "images": [
+        "6",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  }
 }
