@@ -49,17 +49,18 @@ async function loadWorkflow() {
  * @returns {object} The filled workflow object
  */
 function fillWorkflow(workflow, values) {
-    // Stringify, replace all placeholders, parse back
     let workflowStr = JSON.stringify(workflow);
+    console.log("[ComfyInject] workflow before fill:", workflowStr.substring(0, 60));
 
     for (const [key, value] of Object.entries(values)) {
-        const placeholder = `{{${key}}}`;
+        const placeholder = `"{{${key}}}"`;
         const replacement = JSON.stringify(value);
         while (workflowStr.includes(placeholder)) {
             workflowStr = workflowStr.replace(placeholder, replacement);
         }
     }
 
+    console.log("[ComfyInject] workflow after fill:", workflowStr.substring(0, 60));
     return JSON.parse(workflowStr);
 }
 
