@@ -1,6 +1,6 @@
 // Default settings for ComfyInject
 // These are loaded into SillyTavern's extension settings panel.
-// Users can change these without editing the workflow JSON directly.
+// DO NOT CHANGE THESE VALUES HERE. Instead, change them in the UI.
 
 export const MODULE_NAME = "comfyinject";
 

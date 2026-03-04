@@ -69,32 +69,33 @@ python main.py --enable-cors-header
 ---
 ### Step 3 — Configure the extension
 
-Before ComfyInject can generate anything, two settings in `settings.js` **must** be set correctly:
+Before ComfyInject can generate anything, two settings **must** be configured. Open the Extensions panel in SillyTavern, find ComfyInject, and set:
 
-- **`comfy_host`** — the URL of your ComfyUI instance. Default is `http://127.0.0.1:8188` which is correct for most local installs. Change this if you're running ComfyUI on a different port or machine.
-- **`checkpoint`** — the filename of your model **exactly** as it appears in ComfyUI's model list. Example: `waiIllustriousSDXL_v160.safetensors`. The default value will not work unless you happen to have that exact file.
+- **ComfyUI Host** — the URL of your ComfyUI instance. Default is `http://127.0.0.1:8188` which is correct for most local installs. Change this if you're running ComfyUI on a different port or machine.
+- **Checkpoint** — the filename of your model **exactly** as it appears in ComfyUI's model list and model folder. Example: `waiIllustriousSDXL_v160.safetensors`.
 
 All other settings have sensible defaults and don't need to be changed to get started. See the [Configuration](#configuration) section for the full list.
-
 ---
 ## Configuration
 
-Open `settings.js` and update the following:
+All settings are available in the Extensions panel in SillyTavern under **ComfyInject**. The two required settings are visible immediately. Everything else is under **Advanced Settings**.
 
 | Setting | Description |
 |---|---|
-| `comfy_host` | URL of your ComfyUI instance. Default: `http://127.0.0.1:8188` |
-| `checkpoint` | Filename of your model as it appears in ComfyUI. Must match exactly. |
-| `negative_prompt` | Negative prompt applied to every generation. |
-| `steps` | Number of sampling steps. |
-| `cfg` | Classifier-Free Guidance scale. |
-| `sampler` | Sampler name (must be valid in your ComfyUI version). |
-| `scheduler` | Scheduler name (must be valid in your ComfyUI version). |
-| `denoise` | Denoise strength (1.0 for full generation). |
-| `resolutions` | Width/height per AR token. Adjust for your model (SDXL needs higher values). |
+| `ComfyUI Host` | URL of your ComfyUI instance. Default: `http://127.0.0.1:8188` |
+| `Checkpoint` | Filename of your model as it appears in ComfyUI. Must match exactly. |
+| `Negative Prompt` | Negative prompt applied to every generation. |
+| `Steps` | Number of sampling steps. |
+| `CFG` | Classifier-Free Guidance scale. |
+| `Sampler` | Sampler name (must be valid in your ComfyUI version). |
+| `Scheduler` | Scheduler name (must be valid in your ComfyUI version). |
+| `Denoise` | Denoise strength (1.0 for full generation). |
+| `Resolutions` | Width/height per AR token. Adjust for your model (SDXL needs higher values). |
+| `Shot Tags` | Danbooru tags prepended to the prompt for each SHOT token. |
 
 > **Note for SDXL users:** Default resolutions are SD1.5 sized (512px). Bump them up — e.g. PORTRAIT to 832×1216.
 
+To reset all advanced settings back to defaults while keeping your host and checkpoint, press the **Reset Advanced to Defaults** button at the bottom of the Advanced Settings panel.
 ---
 
 ## Marker Format
@@ -137,7 +138,7 @@ Instruct your LLM to output image markers using this exact format:
 | `BACKVIEW` | `from behind` |
 | `POV` | `pov` |
 
-To change these tags, edit the `SHOT_TAGS` object in `src/comfy.js`.
+To change these tags, open the Extensions panel → ComfyInject → **Advanced Settings** → **Shot Tags**.
 
 **SEED** — Seed control:
 

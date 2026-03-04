@@ -33,4 +33,4 @@ Your workflow JSON must use the following placeholder strings exactly as shown. 
 1. Export your workflow from ComfyUI using **Save (API format)** — not the regular Save.
 2. Replace the literal values in your exported JSON with the placeholder strings from the table above.
 3. Save the file into this folder.
-4. Update `comfy.js` to load your filename instead of `comfyinject_default.json`.
+4. Update `comfy.js` to load your filename instead of `comfyinject_default.json`. Or alternatively, name your file `comfyinject_default.json`.
