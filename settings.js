@@ -12,7 +12,7 @@ export const defaultSettings = Object.freeze({
     // --- Model ---
     // The filename of your checkpoint as it appears in ComfyUI's model list.
     // Example: "v1-5-pruned-emaonly.ckpt" or "dreamshaper_8.safetensors"
-    checkpoint: "waiIllustriousSDXL_v160.safetensors",
+    checkpoint: "v1-5-pruned-emaonly-fp16.safetensors",
 
     // --- Negative Prompt ---
     negative_prompt: "worst quality, low quality, blurry, deformed, ugly, extra limbs",

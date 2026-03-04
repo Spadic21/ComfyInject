@@ -10,7 +10,7 @@ When your LLM outputs a marker, ComfyInject intercepts it, sends the prompt to C
 
 - [SillyTavern](https://github.com/SillyTavern/SillyTavern)
 - A local [ComfyUI](https://github.com/comfyanonymous/ComfyUI) instance
-> Tested on SillyTavern **1.16** (latest stable release). Compatibility with staging/nightly builds is not guaranteed.
+> Tested on SillyTavern **1.16** (latest stable release) and staging. Should work on any recent version. 
 
 ---
 
@@ -26,8 +26,10 @@ When your LLM outputs a marker, ComfyInject intercepts it, sends the prompt to C
    ```
 
 **Option B — Git (command line):**
+1. Navigate to your SillyTavern root directory in File Explorer, click the address bar, type cmd and press Enter. This opens a command prompt directly in that folder.
+2. Paste this command in there:
 ```
-git clone https://github.com/Spadic21/ComfyInject "SillyTavern/public/scripts/extensions/third-party/ComfyInject"
+git clone https://github.com/Spadic21/ComfyInject "/public/scripts/extensions/third-party/ComfyInject"
 ```
 
 **Option C — Manual download:**
@@ -41,8 +43,6 @@ SillyTavern/
                 └── ComfyInject/  ← here
 ```
 
-If you used Option B or C, go to the Extensions panel, find ComfyInject in the list, and toggle it ON, then reload SillyTavern.
-
 ---
 
 ### Step 2 — Enable the CORS header in ComfyUI
@@ -52,7 +52,16 @@ ComfyInject needs to talk to ComfyUI from the browser, which requires CORS to be
 **If you use the ComfyUI Desktop app:**
 Open ComfyUI → Settings → **Server-Config** → enable the CORS header option. You'll see `--enable-cors-header *` appear at the top when it's active. The `*` allows all origins — you can restrict it to `http://127.0.0.1:8000` if you prefer, or whatever domain you use for your ST session.
 
-**If you use the portable package or manual install:**
+**If you use the portable package:**
+Open 'run_nvidia_gpu.bat' (or whichever '.bat' file you use) in a text editor. 
+Find the line that starts with '.\python_embeded\python.exe
+Add '--enable-cors-header' to the end of that line. It should look like this:
+```
+.\python_embeded\python.exe -s ComfyUI\main.py --windows-standalone-build --enable-cors-header
+
+```
+
+**If you use the manual install:**
 Launch ComfyUI with the flag:
 ```
 python main.py --enable-cors-header
@@ -220,7 +229,7 @@ To use your own workflow, see `workflows/README.md` for placeholder requirements
 ## Known Limitations
 
 - Images link to your local ComfyUI `/view` endpoint. If ComfyUI is not running on reload, images will not display (the `<img>` tag is saved but the file must be served by ComfyUI).
-- The generating placeholder does not appear for messages processed on extension activation — only for live newly generated messages. This is a cosmetic limitation with no impact on functionality.
+- The generating placeholder may not appear on some versions of SillyTavern. This is a cosmetic limitation with no impact on functionality.
 - Only one `[[IMG: ... ]]` marker per message is processed.
 
 ---
