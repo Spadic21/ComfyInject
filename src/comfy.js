@@ -54,8 +54,10 @@ function fillWorkflow(workflow, values) {
 
     for (const [key, value] of Object.entries(values)) {
         const placeholder = `{{${key}}}`;
-        // Use split+join instead of regex to avoid escaping issues
-        workflowStr = workflowStr.split(`"${placeholder}"`).join(JSON.stringify(value));
+        const replacement = JSON.stringify(value);
+        while (workflowStr.includes(placeholder)) {
+            workflowStr = workflowStr.replace(placeholder, replacement);
+        }
     }
 
     return JSON.parse(workflowStr);

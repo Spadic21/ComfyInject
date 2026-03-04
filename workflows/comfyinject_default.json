@@ -36,8 +36,8 @@
   },
   "4": {
     "inputs": {
-      "width": null,
-      "height": null,
+      "width": "{{WIDTH}}",
+      "height": "{{HEIGHT}}",
       "batch_size": 1
     },
     "class_type": "EmptyLatentImage",
