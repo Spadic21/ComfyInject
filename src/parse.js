@@ -10,7 +10,7 @@ const DEFAULT_AR   = "PORTRAIT";
 const DEFAULT_SHOT = "WIDE";
 
 // Regex to match [[IMG: ... ]] — captures everything inside
-const MARKER_REGEX = /\[\[IMG:\s*(.+?)\s*\]\]/s;
+export const MARKER_REGEX = /\[\[IMG:\s*(.+?)\s*\]\]/s;
 
 /**
  * Checks whether a message string contains an [[IMG: ... ]] marker.

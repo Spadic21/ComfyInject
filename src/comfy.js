@@ -50,7 +50,6 @@ async function loadWorkflow() {
  */
 function fillWorkflow(workflow, values) {
     let workflowStr = JSON.stringify(workflow);
-    console.log("[ComfyInject] workflow before fill:", workflowStr.substring(0, 60));
 
     for (const [key, value] of Object.entries(values)) {
         const placeholder = `"{{${key}}}"`;

@@ -1,4 +1,4 @@
-import { processImageMarker, hasImageMarker } from "./parse.js";
+import { MARKER_REGEX, processImageMarker, hasImageMarker } from "./parse.js";
 import { MODULE_NAME } from "../settings.js";
 
 /**
