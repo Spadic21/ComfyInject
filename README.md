@@ -66,7 +66,9 @@ Launch ComfyUI with the flag:
 ```
 python main.py --enable-cors-header
 ```
+
 ---
+
 ### Step 3 — Configure the extension
 
 Before ComfyInject can generate anything, two settings **must** be configured. Open the Extensions panel in SillyTavern, find ComfyInject, and set:
@@ -75,7 +77,18 @@ Before ComfyInject can generate anything, two settings **must** be configured. O
 - **Checkpoint** — the filename of your model **exactly** as it appears in ComfyUI's model list and model folder. Example: `waiIllustriousSDXL_v160.safetensors`.
 
 All other settings have sensible defaults and don't need to be changed to get started. See the [Configuration](#configuration) section for the full list.
+
 ---
+
+### Step 4 — Set up your LLM
+
+ComfyInject won't generate anything unless your LLM knows to output the `[[IMG: ... ]]` marker format.
+
+- **To get up and running fast:** copy the ready-made prompt from the [System Prompt](#system-prompt) section and paste it into your character's Post-History Instructions (Author's Note in ST).
+- **To write your own:** see the [Marker Format](#marker-format) section for the full spec.
+
+---
+
 ## Configuration
 
 All settings are available in the Extensions panel in SillyTavern under **ComfyInject**. The two required settings are visible immediately. Everything else is under **Advanced Settings**.
