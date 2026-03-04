@@ -77,8 +77,12 @@ async function processMessage(index) {
     message.mes = message.mes.replace(MARKER_REGEX, imgTag);
 
     // Re-render the message using ST's own update function
-    updateMessageBlock(index, message);
-
+    try {
+        updateMessageBlock(index, message);
+    } catch (e) {
+        // ST's reasoning handler may crash on some messages, that's okay
+        // metadata and saveChat still run below
+    }
     // Save prompt and seed to chatMetadata keyed by message index
     // This is what outbound.js reads when building the token-efficient replacement
     if (!context.chatMetadata[MODULE_NAME]) {
