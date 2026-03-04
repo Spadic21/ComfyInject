@@ -97,7 +97,7 @@ async function pollForResult(promptId, host) {
         for (const nodeId of Object.keys(outputs)) {
             const images = outputs[nodeId]?.images;
             if (images && images.length > 0) {
-                return images[0].filename;
+                return { filename: images[0].filename, subfolder: images[0].subfolder ?? "" };
             }
         }
     }
@@ -111,8 +111,10 @@ async function pollForResult(promptId, host) {
  * @param {string} host - ComfyUI host URL
  * @returns {string} The full image URL
  */
-function buildImageUrl(filename, host) {
-    return `${host}/view?filename=${encodeURIComponent(filename)}&type=output`;
+function buildImageUrl(filename, subfolder, host) {
+    const params = new URLSearchParams({ filename, type: "output" });
+    if (subfolder) params.set("subfolder", subfolder);
+    return `${host}/view?${params.toString()}`;
 }
 
 /**
@@ -157,10 +159,10 @@ export async function generateImage({ prompt, ar, shot, seed }) {
     const promptId = await submitPrompt(filled, settings.comfy_host);
     console.log(`[ComfyInject] Job submitted, prompt_id: ${promptId}`);
 
-    const filename = await pollForResult(promptId, settings.comfy_host);
+    const { filename, subfolder } = await pollForResult(promptId, settings.comfy_host);
     console.log(`[ComfyInject] Image ready: ${filename}`);
 
-    const imageUrl = buildImageUrl(filename, settings.comfy_host);
+    const imageUrl = buildImageUrl(filename, subfolder, settings.comfy_host);
 
     return { imageUrl, seed, prompt }; // Just raw 'prompt' so 'outbound.js' can construct the token-efficient replacement like: [[IMG: danbooru tags the bot wrote | SEED_NUMBER ]]
 }
