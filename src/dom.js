@@ -35,19 +35,18 @@ async function processMessage(index) {
 
     console.log(`[ComfyInject] Processing message ${index}`);
 
-    // Show a generating placeholder while we wait using direct DOM manipulation
-    // We don't use updateMessageBlock here because it crashes when called
-    // before the DOM node is fully ready (e.g. during scanExistingMessages on load)
-    const messageNode = document.querySelector(`[mesid="${index}"]`);
-    if (messageNode) {
-        const mesText = messageNode.querySelector(".mes_text");
-        if (mesText) {
-            mesText.innerHTML = mesText.innerHTML.replace(
-                MARKER_REGEX,
-                `<span class="comfyinject-pending">[Generating image...]</span>`
-            );
-        }
+    // Show placeholder by patching mes temporarily and catching any ST handler errors
+    const originalMes = message.mes;
+    message.mes = message.mes.replace(
+        MARKER_REGEX,
+        `<span class="comfyinject-pending">[Generating image...]</span>`
+    );
+    try {
+        updateMessageBlock(index, message);
+    } catch (e) {
+        // ST's reasoning handler may crash on some messages, that's okay
     }
+    message.mes = originalMes;
 
 
     let result;
