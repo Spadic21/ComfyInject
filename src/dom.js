@@ -23,6 +23,7 @@ function buildImgTag(imageUrl, prompt, seed) {
 async function processMessage(index) {
     const context = SillyTavern.getContext();
     const message = context.chat[index];
+    const { updateMessageBlock } = SillyTavern.getContext();
 
     if (!message) return;
 
@@ -34,17 +35,17 @@ async function processMessage(index) {
 
     console.log(`[ComfyInject] Processing message ${index}`);
 
-    // Show a generating placeholder in the DOM while we wait
-    const messageNode = document.querySelector(`[mesid="${index}"]`);
-    if (messageNode) {
-        const mesText = messageNode.querySelector(".mes_text");
-        if (mesText) {
-            mesText.innerHTML = mesText.innerHTML.replace(
-                /\[\[IMG:.*?\]\]/s,
-                `<span class="comfyinject-pending">[Generating image...]</span>`
-            );
-        }
-    }
+    // Show a generating placeholder while we wait
+    // Temporarily modify mes and re-render so the user sees feedback immediately
+    const originalMes = message.mes;
+    message.mes = message.mes.replace(
+        /\[\[IMG:.*?\]\]/s,
+        `<span class="comfyinject-pending">[Generating image...]</span>`
+    );
+    updateMessageBlock(index, message);
+
+    // Restore original mes in case generation fails, so the marker isn't lost
+    message.mes = originalMes;
 
     let result;
     try {
@@ -75,7 +76,6 @@ async function processMessage(index) {
 
     // Re-render the message using ST's own update function
     // This is more reliable than manually patching the DOM
-    const { updateMessageBlock } = SillyTavern.getContext();
     updateMessageBlock(index, message);
 
     // Save prompt and seed to chatMetadata keyed by mesid
