@@ -48,14 +48,14 @@ async function processMessage(index) {
     }
     message.mes = originalMes;
 
-
     let result;
     try {
         result = await processImageMarker(message.mes);
     } catch (err) {
         console.error(`[ComfyInject] Image generation failed for message ${index}:`, err);
 
-        // Replace placeholder with error message so the user knows something went wrong
+        // Try to show an error in the DOM — messageNode may not exist for old messages
+        const messageNode = document.querySelector(`[mesid="${index}"]`);
         if (messageNode) {
             const mesText = messageNode.querySelector(".mes_text");
             if (mesText) {
@@ -74,14 +74,13 @@ async function processMessage(index) {
     const imgTag = buildImgTag(imageUrl, prompt, seed);
 
     // Replace the [[IMG: ... ]] marker in the mes field permanently
-    message.mes = message.mes.replace(/\[\[IMG:.*?\]\]/s, imgTag);
+    message.mes = message.mes.replace(MARKER_REGEX, imgTag);
 
     // Re-render the message using ST's own update function
-    // This is more reliable than manually patching the DOM
     updateMessageBlock(index, message);
 
-    // Save prompt and seed to chatMetadata keyed by mesid
-    // This is what outbound.js will read when building the token-efficient replacement
+    // Save prompt and seed to chatMetadata keyed by message index
+    // This is what outbound.js reads when building the token-efficient replacement
     if (!context.chatMetadata[MODULE_NAME]) {
         context.chatMetadata[MODULE_NAME] = {};
     }
@@ -113,13 +112,13 @@ async function scanExistingMessages() {
     }
 }
 
+// Tracks the last chat ID we scanned to prevent double scanning on startup
+let lastScannedChatId = null;
+
 /**
  * Registers all SillyTavern event listeners.
  * Called once from index.js on load.
  */
-// Tracks the last chat ID we scanned to prevent double scanning on startup
-let lastScannedChatId = null;
-
 export function initDom() {
     const { eventSource, event_types } = SillyTavern.getContext();
 

@@ -33,4 +33,19 @@ export const defaultSettings = Object.freeze({
         CINEMA:    { width: 768,  height: 432 },
     },
 
+    // --- Shot Tags ---
+    // Danbooru-style tags prepended to the positive prompt for each SHOT token.
+    // Edit these to match your model's preferred framing vocabulary.
+    shot_tags: {
+        CLOSE:     "close-up, face focus",
+        MEDIUM:    "upper body",
+        WIDE:      "full body",
+        DUTCH:     "dutch angle",
+        OVERHEAD:  "from above, bird's eye view",
+        LOWANGLE:  "from below",
+        HIGHANGLE: "from above",
+        PROFILE:   "profile, from side",
+        BACKVIEW:  "from behind",
+        POV:       "pov",
+    },
 });

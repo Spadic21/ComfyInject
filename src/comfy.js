@@ -2,20 +2,6 @@ import { MODULE_NAME } from "../settings.js";
 
 const EXTENSION_FOLDER = `scripts/extensions/third-party/ComfyInject`;
 
-// Danbooru-style shot type tags injected at the front of the positive prompt
-const SHOT_TAGS = {
-    CLOSE:     "close-up, face focus",
-    MEDIUM:    "upper body",
-    WIDE:      "full body",
-    DUTCH:     "dutch angle",
-    OVERHEAD:  "from above, bird's eye view",
-    LOWANGLE:  "from below",
-    HIGHANGLE: "from above",
-    PROFILE:   "profile, from side",
-    BACKVIEW:  "from behind",
-    POV:       "pov",
-};
-
 // How long to wait between polls (ms) and how many times to try before giving up
 const POLL_INTERVAL_MS = 1500;
 const POLL_MAX_ATTEMPTS = 60; // 90 seconds max
@@ -148,7 +134,7 @@ export async function generateImage({ prompt, ar, shot, seed }) {
     }
 
     // Prepend shot tags to the positive prompt
-    const shotTag = SHOT_TAGS[shot] ?? "";
+    const shotTag = settings.shot_tags?.[shot] ?? "";
     const positivePrompt = shotTag ? `${shotTag}, ${prompt}` : prompt;
 
     // Load and fill the workflow
