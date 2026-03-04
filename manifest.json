@@ -7,6 +7,7 @@
   "author": "K",
   "version": "0.1.0",
   "homePage": "https://github.com/Spadic21/ComfyInject",
-  "description": "Parses COMFYGEN tags and injects ComfyUI images into chat.",
-  "auto_update": false
+  "description": "Parses [[IMG: ... ]] markers and injects ComfyUI images into chat.",
+  "auto_update": false,
+  "generate_interceptor": "comfyInjectInterceptor"
 }
