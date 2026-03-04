@@ -58,7 +58,6 @@ Launch ComfyUI with the flag:
 python main.py --enable-cors-header
 ```
 ---
-Done! Now any correctly formatted prompts should be fed to ComfyUI and generate an image to be inserted into the message.
 
 ## Configuration
 
@@ -220,3 +219,7 @@ To use your own workflow, see `workflows/README.md` for placeholder requirements
 ## License
 
 AGPLv3 — see [LICENSE](LICENSE) for details.
+
+---
+
+*Built with VSCode and an embarrassing amount of help from [Claude](https://claude.ai) by Anthropic.*
