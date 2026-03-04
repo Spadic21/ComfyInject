@@ -10,7 +10,7 @@
   },
   "2": {
     "inputs": {
-      "text": "POSITIVE_PROMPT",
+      "text": "{{POSITIVE_PROMPT}}",
       "clip": [
         "1",
         1
@@ -23,7 +23,7 @@
   },
   "3": {
     "inputs": {
-      "text": "NEGATIVE_PROMPT",
+      "text": "{{NEGATIVE_PROMPT}}",
       "clip": [
         "1",
         1
@@ -47,12 +47,12 @@
   },
   "5": {
     "inputs": {
-      "seed": null,
-      "steps": null,
-      "cfg": null,
+      "seed": "{{SEED}}",
+      "steps": "{{STEPS}}",
+      "cfg": "{{CFG}}",
       "sampler_name": "{{SAMPLER}}",
       "scheduler": "{{SCHEDULER}}",
-      "denoise": null,
+      "denoise": "{{DENOISE}}",
       "model": [
         "1",
         0
