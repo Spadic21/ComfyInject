@@ -43,14 +43,12 @@ async function processMessage(index) {
         const mesText = messageNode.querySelector(".mes_text");
         if (mesText) {
             mesText.innerHTML = mesText.innerHTML.replace(
-                /\[\[IMG:.*?\]\]/s,
+                MARKER_REGEX,
                 `<span class="comfyinject-pending">[Generating image...]</span>`
             );
         }
     }
 
-    // Restore original mes in case generation fails, so the marker isn't lost
-    message.mes = originalMes;
 
     let result;
     try {
