@@ -77,10 +77,19 @@ async function processMessage(index) {
     if (messageNode) {
         const mesText = messageNode.querySelector(".mes_text");
         if (mesText) {
-            mesText.innerHTML = mesText.innerHTML.replace(
-                /<span class="comfyinject-pending">.*?<\/span>/,
-                imgTag
-            );
+            // Try replacing the pending placeholder first
+            if (mesText.innerHTML.includes('comfyinject-pending')) {
+                mesText.innerHTML = mesText.innerHTML.replace(
+                    /<span class="comfyinject-pending">.*?<\/span>/,
+                    imgTag
+                );
+            } else {
+                // Fall back to replacing the raw marker directly in the DOM
+                mesText.innerHTML = mesText.innerHTML.replace(
+                    /\[\[IMG:.*?\]\]/s,
+                    imgTag
+                );
+            }
         }
     }
 
