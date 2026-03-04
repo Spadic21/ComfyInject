@@ -29,7 +29,7 @@ When your LLM outputs a marker, ComfyInject intercepts it, sends the prompt to C
 1. Navigate to your SillyTavern root directory in File Explorer, click the address bar, type cmd and press Enter. This opens a command prompt directly in that folder.
 2. Paste this command in there:
 ```
-git clone https://github.com/Spadic21/ComfyInject "/public/scripts/extensions/third-party/ComfyInject"
+git clone https://github.com/Spadic21/ComfyInject "public/scripts/extensions/third-party/ComfyInject"
 ```
 
 **Option C — Manual download:**
@@ -53,9 +53,9 @@ ComfyInject needs to talk to ComfyUI from the browser, which requires CORS to be
 Open ComfyUI → Settings → **Server-Config** → enable the CORS header option. You'll see `--enable-cors-header *` appear at the top when it's active. The `*` allows all origins — you can restrict it to `http://127.0.0.1:8000` if you prefer, or whatever domain you use for your ST session.
 
 **If you use the portable package:**
-Open 'run_nvidia_gpu.bat' (or whichever '.bat' file you use) in a text editor. 
-Find the line that starts with '.\python_embeded\python.exe
-Add '--enable-cors-header' to the end of that line. It should look like this:
+Open `run_nvidia_gpu.bat` (or whichever `.bat` file you use) in a text editor. 
+Find the line that starts with `.\python_embeded\python.exe`
+Add `--enable-cors-header` to the end of that line. It should look like this:
 ```
 .\python_embeded\python.exe -s ComfyUI\main.py --windows-standalone-build --enable-cors-header
 
