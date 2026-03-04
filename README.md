@@ -58,7 +58,16 @@ Launch ComfyUI with the flag:
 python main.py --enable-cors-header
 ```
 ---
+### Step 3 — Configure the extension
 
+Before ComfyInject can generate anything, two settings in `settings.js` **must** be set correctly:
+
+- **`comfy_host`** — the URL of your ComfyUI instance. Default is `http://127.0.0.1:8188` which is correct for most local installs. Change this if you're running ComfyUI on a different port or machine.
+- **`checkpoint`** — the filename of your model **exactly** as it appears in ComfyUI's model list. Example: `waiIllustriousSDXL_v160.safetensors`. The default value will not work unless you happen to have that exact file.
+
+All other settings have sensible defaults and don't need to be changed to get started. See the [Configuration](#configuration) section for the full list.
+
+---
 ## Configuration
 
 Open `settings.js` and update the following:
