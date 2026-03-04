@@ -60,7 +60,6 @@ function fillWorkflow(workflow, values) {
         }
     }
 
-    console.log("[ComfyInject] workflow after fill:", workflowStr.substring(0, 60));
     return JSON.parse(workflowStr);
 }
 

@@ -121,22 +121,30 @@ async function scanExistingMessages() {
  * Registers all SillyTavern event listeners.
  * Called once from index.js on load.
  */
+// Tracks the last chat ID we scanned to prevent double scanning on startup
+let lastScannedChatId = null;
+
 export function initDom() {
-    const context = SillyTavern.getContext();
-    const { eventSource, event_types } = context;
+    const { eventSource, event_types } = SillyTavern.getContext();
 
     // Process new bot messages as they are rendered
     eventSource.on(event_types.CHARACTER_MESSAGE_RENDERED, async (index) => {
         await processMessage(index);
     });
 
-    // Re-scan on chat switch in case new chat has unprocessed markers
+    // Re-scan when chat changes, but only if it's actually a different chat
     eventSource.on(event_types.CHAT_CHANGED, async () => {
+        const currentChatId = SillyTavern.getContext().getCurrentChatId();
+        if (currentChatId === lastScannedChatId) return;
+        lastScannedChatId = currentChatId;
         await scanExistingMessages();
     });
 
     // Initial scan when app is ready
     eventSource.on(event_types.APP_READY, async () => {
+        const currentChatId = SillyTavern.getContext().getCurrentChatId();
+        if (currentChatId === lastScannedChatId) return;
+        lastScannedChatId = currentChatId;
         await scanExistingMessages();
     });
 
