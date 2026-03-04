@@ -10,7 +10,7 @@ When your LLM outputs a marker, ComfyInject intercepts it, sends the prompt to C
 
 - [SillyTavern](https://github.com/SillyTavern/SillyTavern)
 - A local [ComfyUI](https://github.com/comfyanonymous/ComfyUI) instance
-> Tested on SillyTavern **1.16** (latest stable release). Compatibility with staging/nightly builds is not guaranteed.
+> Tested on SillyTavern **1.16** (latest stable release) and staging. Should work on any recent version. 
 
 ---
 
@@ -26,8 +26,10 @@ When your LLM outputs a marker, ComfyInject intercepts it, sends the prompt to C
    ```
 
 **Option B — Git (command line):**
+1. Navigate to your SillyTavern root directory in File Explorer, click the address bar, type cmd and press Enter. This opens a command prompt directly in that folder.
+2. Paste this command in there:
 ```
-git clone https://github.com/Spadic21/ComfyInject "SillyTavern/public/scripts/extensions/third-party/ComfyInject"
+git clone https://github.com/Spadic21/ComfyInject "public/scripts/extensions/third-party/ComfyInject"
 ```
 
 **Option C — Manual download:**
@@ -41,8 +43,6 @@ SillyTavern/
                 └── ComfyInject/  ← here
 ```
 
-If you used Option B or C, go to the Extensions panel, find ComfyInject in the list, and toggle it ON, then reload SillyTavern.
-
 ---
 
 ### Step 2 — Enable the CORS header in ComfyUI
@@ -52,40 +52,63 @@ ComfyInject needs to talk to ComfyUI from the browser, which requires CORS to be
 **If you use the ComfyUI Desktop app:**
 Open ComfyUI → Settings → **Server-Config** → enable the CORS header option. You'll see `--enable-cors-header *` appear at the top when it's active. The `*` allows all origins — you can restrict it to `http://127.0.0.1:8000` if you prefer, or whatever domain you use for your ST session.
 
-**If you use the portable package or manual install:**
+**If you use the portable package:**
+Open `run_nvidia_gpu.bat` (or whichever `.bat` file you use) in a text editor. 
+Find the line that starts with `.\python_embeded\python.exe`
+Add `--enable-cors-header` to the end of that line. It should look like this:
+```
+.\python_embeded\python.exe -s ComfyUI\main.py --windows-standalone-build --enable-cors-header
+
+```
+
+**If you use the manual install:**
 Launch ComfyUI with the flag:
 ```
 python main.py --enable-cors-header
 ```
+
 ---
+
 ### Step 3 — Configure the extension
 
-Before ComfyInject can generate anything, two settings in `settings.js` **must** be set correctly:
+Before ComfyInject can generate anything, two settings **must** be configured. Open the Extensions panel in SillyTavern, find ComfyInject, and set:
 
-- **`comfy_host`** — the URL of your ComfyUI instance. Default is `http://127.0.0.1:8188` which is correct for most local installs. Change this if you're running ComfyUI on a different port or machine.
-- **`checkpoint`** — the filename of your model **exactly** as it appears in ComfyUI's model list. Example: `waiIllustriousSDXL_v160.safetensors`. The default value will not work unless you happen to have that exact file.
+- **ComfyUI Host** — the URL of your ComfyUI instance. Default is `http://127.0.0.1:8188` which is correct for most local installs. Change this if you're running ComfyUI on a different port or machine.
+- **Checkpoint** — the filename of your model **exactly** as it appears in ComfyUI's model list and model folder. Example: `waiIllustriousSDXL_v160.safetensors`.
 
 All other settings have sensible defaults and don't need to be changed to get started. See the [Configuration](#configuration) section for the full list.
 
 ---
+
+### Step 4 — Set up your LLM
+
+ComfyInject won't generate anything unless your LLM knows to output the `[[IMG: ... ]]` marker format.
+
+- **To get up and running fast:** copy the ready-made prompt from the [System Prompt](#system-prompt) section and paste it into your character's Post-History Instructions (Author's Note in ST).
+- **To write your own:** see the [Marker Format](#marker-format) section for the full spec.
+
+---
+
 ## Configuration
 
-Open `settings.js` and update the following:
+All settings are available in the Extensions panel in SillyTavern under **ComfyInject**. The two required settings are visible immediately. Everything else is under **Advanced Settings**.
 
 | Setting | Description |
 |---|---|
-| `comfy_host` | URL of your ComfyUI instance. Default: `http://127.0.0.1:8188` |
-| `checkpoint` | Filename of your model as it appears in ComfyUI. Must match exactly. |
-| `negative_prompt` | Negative prompt applied to every generation. |
-| `steps` | Number of sampling steps. |
-| `cfg` | Classifier-Free Guidance scale. |
-| `sampler` | Sampler name (must be valid in your ComfyUI version). |
-| `scheduler` | Scheduler name (must be valid in your ComfyUI version). |
-| `denoise` | Denoise strength (1.0 for full generation). |
-| `resolutions` | Width/height per AR token. Adjust for your model (SDXL needs higher values). |
+| `ComfyUI Host` | URL of your ComfyUI instance. Default: `http://127.0.0.1:8188` |
+| `Checkpoint` | Filename of your model as it appears in ComfyUI. Must match exactly. |
+| `Negative Prompt` | Negative prompt applied to every generation. |
+| `Steps` | Number of sampling steps. |
+| `CFG` | Classifier-Free Guidance scale. |
+| `Sampler` | Sampler name (must be valid in your ComfyUI version). |
+| `Scheduler` | Scheduler name (must be valid in your ComfyUI version). |
+| `Denoise` | Denoise strength (1.0 for full generation). |
+| `Resolutions` | Width/height per AR token. Adjust for your model (SDXL needs higher values). |
+| `Shot Tags` | Danbooru tags prepended to the prompt for each SHOT token. |
 
 > **Note for SDXL users:** Default resolutions are SD1.5 sized (512px). Bump them up — e.g. PORTRAIT to 832×1216.
 
+To reset all advanced settings back to defaults while keeping your host and checkpoint, press the **Reset Advanced to Defaults** button at the bottom of the Advanced Settings panel.
 ---
 
 ## Marker Format
@@ -128,7 +151,7 @@ Instruct your LLM to output image markers using this exact format:
 | `BACKVIEW` | `from behind` |
 | `POV` | `pov` |
 
-To change these tags, edit the `SHOT_TAGS` object in `src/comfy.js`.
+To change these tags, open the Extensions panel → ComfyInject → **Advanced Settings** → **Shot Tags**.
 
 **SEED** — Seed control:
 
@@ -220,7 +243,7 @@ To use your own workflow, see `workflows/README.md` for placeholder requirements
 ## Known Limitations
 
 - Images link to your local ComfyUI `/view` endpoint. If ComfyUI is not running on reload, images will not display (the `<img>` tag is saved but the file must be served by ComfyUI).
-- The generating placeholder does not appear for messages processed on extension activation — only for live newly generated messages. This is a cosmetic limitation with no impact on functionality.
+- The generating placeholder may not appear on some versions of SillyTavern. This is a cosmetic limitation with no impact on functionality.
 - Only one `[[IMG: ... ]]` marker per message is processed.
 
 ---

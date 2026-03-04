@@ -1,6 +1,6 @@
 // Default settings for ComfyInject
 // These are loaded into SillyTavern's extension settings panel.
-// Users can change these without editing the workflow JSON directly.
+// DO NOT CHANGE THESE VALUES HERE. Instead, change them in the UI.
 
 export const MODULE_NAME = "comfyinject";
 
@@ -12,7 +12,7 @@ export const defaultSettings = Object.freeze({
     // --- Model ---
     // The filename of your checkpoint as it appears in ComfyUI's model list.
     // Example: "v1-5-pruned-emaonly.ckpt" or "dreamshaper_8.safetensors"
-    checkpoint: "waiIllustriousSDXL_v160.safetensors",
+    checkpoint: "v1-5-pruned-emaonly-fp16.safetensors",
 
     // --- Negative Prompt ---
     negative_prompt: "worst quality, low quality, blurry, deformed, ugly, extra limbs",

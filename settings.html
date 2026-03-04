@@ -1,0 +1,117 @@
+<div id="comfyinject_settings">
+    <div class="inline-drawer">
+        <div class="inline-drawer-toggle inline-drawer-header">
+            <b>ComfyInject</b>
+            <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
+        </div>
+        <div class="inline-drawer-content">
+
+            <!-- ComfyUI Host -->
+            <div class="flex-container flexGap5 alignItemsCenter">
+                <label for="comfyinject_host">ComfyUI Host</label>
+                <input id="comfyinject_host" type="text" class="text_pole" placeholder="http://127.0.0.1:8188" />
+            </div>
+
+            <!-- Checkpoint -->
+            <div class="flex-container flexGap5 alignItemsCenter">
+                <label for="comfyinject_checkpoint">Checkpoint</label>
+                <input id="comfyinject_checkpoint" type="text" class="text_pole" placeholder="your_model.safetensors" />
+            </div>
+
+            <hr class="sysHR" />
+
+            <!-- Advanced Settings Toggle Button -->
+            <div class="flex-container flexGap5">
+                <div id="comfyinject_advanced_toggle" class="menu_button menu_button_icon">
+                    <i class="fa-solid fa-cog"></i>
+                    <span>Advanced Settings</span>
+                </div>
+            </div>
+
+            <!-- Advanced Settings Block (hidden by default) -->
+            <div id="comfyinject_advanced_block" style="display:none;">
+
+                <hr class="sysHR" />
+
+                <!-- Negative Prompt -->
+                <div class="flex-container flexGap5 alignItemsCenter">
+                    <label for="comfyinject_negative_prompt">Negative Prompt</label>
+                    <textarea id="comfyinject_negative_prompt" class="text_pole" rows="3"></textarea>
+                </div>
+
+                <!-- Sampler Settings -->
+                <div class="flex-container flexGap5 alignItemsCenter">
+                    <label for="comfyinject_steps">Steps</label>
+                    <input id="comfyinject_steps" type="number" class="text_pole" min="1" max="150" />
+                </div>
+
+                <div class="flex-container flexGap5 alignItemsCenter">
+                    <label for="comfyinject_cfg">CFG</label>
+                    <input id="comfyinject_cfg" type="number" class="text_pole" min="1" max="30" step="0.5" />
+                </div>
+
+                <div class="flex-container flexGap5 alignItemsCenter">
+                    <label for="comfyinject_sampler">Sampler</label>
+                    <input id="comfyinject_sampler" type="text" class="text_pole" />
+                </div>
+
+                <div class="flex-container flexGap5 alignItemsCenter">
+                    <label for="comfyinject_scheduler">Scheduler</label>
+                    <input id="comfyinject_scheduler" type="text" class="text_pole" />
+                </div>
+
+                <div class="flex-container flexGap5 alignItemsCenter">
+                    <label for="comfyinject_denoise">Denoise</label>
+                    <input id="comfyinject_denoise" type="number" class="text_pole" min="0" max="1" step="0.05" />
+                </div>
+
+                <hr class="sysHR" />
+
+                <!-- Resolutions Toggle -->
+                <div class="flex-container flexGap5">
+                    <div id="comfyinject_resolutions_toggle" class="menu_button menu_button_icon">
+                        <i class="fa-solid fa-expand"></i>
+                        <span>Resolutions</span>
+                    </div>
+                </div>
+
+                <div id="comfyinject_resolutions_block" style="display:none;">
+                    <small>Width × Height in pixels for each AR token.</small>
+                    <br />
+                    <div id="comfyinject_resolutions">
+                        <!-- Populated by ui.js -->
+                    </div>
+                </div>
+
+                <hr class="sysHR" />
+
+                <!-- Shot Tags Toggle -->
+                <div class="flex-container flexGap5">
+                    <div id="comfyinject_shot_tags_toggle" class="menu_button menu_button_icon">
+                        <i class="fa-solid fa-camera"></i>
+                        <span>Shot Tags</span>
+                    </div>
+                </div>
+
+                <div id="comfyinject_shot_tags_block" style="display:none;">
+                    <small>Danbooru tags prepended to the prompt for each SHOT token.</small>
+                    <br />
+                    <div id="comfyinject_shot_tags">
+                        <!-- Populated by ui.js -->
+                    </div>
+                </div>
+
+                <hr class="sysHR" />
+
+                <!-- Reset Button -->
+                <div class="flex-container flexGap5">
+                    <input id="comfyinject_reset" class="menu_button" type="submit" value="Reset Advanced to Defaults" />
+                </div>
+
+            </div>
+
+            <hr class="sysHR" />
+
+        </div>
+    </div>
+</div>
