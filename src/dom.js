@@ -35,14 +35,19 @@ async function processMessage(index) {
 
     console.log(`[ComfyInject] Processing message ${index}`);
 
-    // Show a generating placeholder while we wait
-    // Temporarily modify mes and re-render so the user sees feedback immediately
-    const originalMes = message.mes;
-    message.mes = message.mes.replace(
-        /\[\[IMG:.*?\]\]/s,
-        `<span class="comfyinject-pending">[Generating image...]</span>`
-    );
-    updateMessageBlock(index, message);
+    // Show a generating placeholder while we wait using direct DOM manipulation
+    // We don't use updateMessageBlock here because it crashes when called
+    // before the DOM node is fully ready (e.g. during scanExistingMessages on load)
+    const messageNode = document.querySelector(`[mesid="${index}"]`);
+    if (messageNode) {
+        const mesText = messageNode.querySelector(".mes_text");
+        if (mesText) {
+            mesText.innerHTML = mesText.innerHTML.replace(
+                /\[\[IMG:.*?\]\]/s,
+                `<span class="comfyinject-pending">[Generating image...]</span>`
+            );
+        }
+    }
 
     // Restore original mes in case generation fails, so the marker isn't lost
     message.mes = originalMes;
