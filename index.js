@@ -1,4 +1,5 @@
 import { initDom } from "./src/dom.js";
+import { initUI } from "./src/ui.js";
 import { MODULE_NAME, defaultSettings } from "./settings.js";
 
 // Import outbound so comfyInjectInterceptor gets registered on globalThis
@@ -32,6 +33,7 @@ function initSettings() {
     console.log("[ComfyInject] Loading...");
 
     initSettings();
+    await initUI();
     initDom();
 
     console.log("[ComfyInject] Ready!");
