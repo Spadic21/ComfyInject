@@ -73,25 +73,10 @@ async function processMessage(index) {
     // Replace the [[IMG: ... ]] marker in the mes field permanently
     message.mes = message.mes.replace(/\[\[IMG:.*?\]\]/s, imgTag);
 
-    // Update the DOM to show the actual image
-    if (messageNode) {
-        const mesText = messageNode.querySelector(".mes_text");
-        if (mesText) {
-            // Try replacing the pending placeholder first
-            if (mesText.innerHTML.includes('comfyinject-pending')) {
-                mesText.innerHTML = mesText.innerHTML.replace(
-                    /<span class="comfyinject-pending">.*?<\/span>/,
-                    imgTag
-                );
-            } else {
-                // Fall back to replacing the raw marker directly in the DOM
-                mesText.innerHTML = mesText.innerHTML.replace(
-                    /\[\[IMG:.*?\]\]/s,
-                    imgTag
-                );
-            }
-        }
-    }
+    // Re-render the message using ST's own update function
+    // This is more reliable than manually patching the DOM
+    const { updateMessageBlock } = SillyTavern.getContext();
+    updateMessageBlock(index, message);
 
     // Save prompt and seed to chatMetadata keyed by mesid
     // This is what outbound.js will read when building the token-efficient replacement
