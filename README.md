@@ -1,8 +1,34 @@
+<a id="readme-top"></a>
+
 # ComfyInject
 
 A SillyTavern extension that automatically generates images from `[[IMG: ... ]]` markers in bot messages using your local ComfyUI instance.
 
 When your LLM outputs a marker, ComfyInject intercepts it, sends the prompt to ComfyUI, and replaces the marker with the generated image — all without leaving the chat. Images are saved permanently into the chat history and survive page reloads. Outbound prompts sent to the LLM replace injected images with a compact token so the model maintains visual continuity across the conversation.
+
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#requirements">Requirements</a></li>
+    <li>
+      <a href="#installation">Installation</a>
+      <ul>
+        <li><a href="#step-1--install-the-extension">Step 1 — Install the extension</a></li>
+        <li><a href="#step-2--enable-the-cors-header-in-comfyui">Step 2 — Enable the CORS header in ComfyUI</a></li>
+        <li><a href="#step-3--configure-the-extension">Step 3 — Configure the extension</a></li>
+        <li><a href="#step-4--set-up-your-llm">Step 4 — Set up your LLM</a></li>
+      </ul>
+    </li>
+    <li><a href="#configuration">Configuration</a></li>
+    <li><a href="#marker-format">Marker Format</a></li>
+    <li><a href="#system-prompt">System Prompt</a></li>
+    <li><a href="#custom-workflows">Custom Workflows</a></li>
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#known-limitations">Known Limitations</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#license">License</a></li>
+  </ol>
+</details>
 
 ---
 
@@ -10,7 +36,9 @@ When your LLM outputs a marker, ComfyInject intercepts it, sends the prompt to C
 
 - [SillyTavern](https://github.com/SillyTavern/SillyTavern)
 - A local [ComfyUI](https://github.com/comfyanonymous/ComfyUI) instance
-> Tested on SillyTavern **1.16** (latest stable release) and staging. Should work on any recent version. 
+> Tested on SillyTavern **1.16** (latest stable release) and staging. Should work on any recent version.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -53,12 +81,11 @@ ComfyInject needs to talk to ComfyUI from the browser, which requires CORS to be
 Open ComfyUI → Settings → **Server-Config** → enable the CORS header option. You'll see `--enable-cors-header *` appear at the top when it's active. The `*` allows all origins — you can restrict it to `http://127.0.0.1:8000` if you prefer, or whatever domain you use for your ST session.
 
 **If you use the portable package:**
-Open `run_nvidia_gpu.bat` (or whichever `.bat` file you use) in a text editor. 
+Open `run_nvidia_gpu.bat` (or whichever `.bat` file you use) in a text editor.
 Find the line that starts with `.\python_embeded\python.exe`
 Add `--enable-cors-header` to the end of that line. It should look like this:
 ```
 .\python_embeded\python.exe -s ComfyUI\main.py --windows-standalone-build --enable-cors-header
-
 ```
 
 **If you use the manual install:**
@@ -74,7 +101,7 @@ python main.py --enable-cors-header
 Before ComfyInject can generate anything, two settings **must** be configured. Open the Extensions panel in SillyTavern, find ComfyInject, and set:
 
 - **ComfyUI Host** — the URL of your ComfyUI instance. Default is `http://127.0.0.1:8188` which is correct for most local installs. Change this if you're running ComfyUI on a different port or machine.
-- **Checkpoint** — the filename of your model **exactly** as it appears in ComfyUI's model list and model folder. Example: `waiIllustriousSDXL_v160.safetensors`.
+- **Checkpoint** — the filename of your model **exactly** as it appears in ComfyUI's model list and model folder. Example: `waiIllustriousSDXL_v160.safetensors`. Not sure where to find this? See the [FAQ](#how-do-i-find-my-checkpoint-filename-in-comfyui).
 
 All other settings have sensible defaults and don't need to be changed to get started. See the [Configuration](#configuration) section for the full list.
 
@@ -86,6 +113,8 @@ ComfyInject won't generate anything unless your LLM knows to output the `[[IMG: 
 
 - **To get up and running fast:** copy the ready-made prompt from the [System Prompt](#system-prompt) section and paste it into your character's Post-History Instructions (Author's Note in ST).
 - **To write your own:** see the [Marker Format](#marker-format) section for the full spec.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -109,6 +138,9 @@ All settings are available in the Extensions panel in SillyTavern under **ComfyI
 > **Note for SDXL users:** Default resolutions are SD1.5 sized (512px). Bump them up — e.g. PORTRAIT to 832×1216.
 
 To reset all advanced settings back to defaults while keeping your host and checkpoint, press the **Reset Advanced to Defaults** button at the bottom of the Advanced Settings panel.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ---
 
 ## Marker Format
@@ -167,6 +199,8 @@ To change these tags, open the Extensions panel → ComfyInject → **Advanced S
 [[IMG: 1girl, long red hair, green eyes, white sundress, standing in heavy rain, wet cobblestone street, neon lights reflecting in puddles, cinematic lighting | PORTRAIT | MEDIUM | RANDOM ]]
 ```
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ---
 
 ## System Prompt
@@ -218,6 +252,8 @@ Never explain or mention the marker in narration.
 
 > **Model recommendations:** Larger models (70B+) or cloud APIs like DeepSeek V3.2 follow the format far more reliably than small local models. Models under 13B tend to produce inconsistent markers and hallucinate character details.
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ---
 
 ## Custom Workflows
@@ -225,6 +261,8 @@ Never explain or mention the marker in narration.
 The default workflow (`workflows/comfyinject_default.json`) uses only built-in ComfyUI nodes and works out of the box with any standard checkpoint.
 
 To use your own workflow, see `workflows/README.md` for placeholder requirements.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
@@ -238,6 +276,8 @@ To use your own workflow, see `workflows/README.md` for placeholder requirements
 6. The image URL and prompt are saved to chat metadata
 7. On the next generation, the `<img>` tag is ephemerally replaced with `[[IMG: prompt | seed ]]` in the outbound prompt so the LLM sees a token-efficient reference instead of raw HTML
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ---
 
 ## Known Limitations
@@ -245,6 +285,52 @@ To use your own workflow, see `workflows/README.md` for placeholder requirements
 - Images link to your local ComfyUI `/view` endpoint. If ComfyUI is not running on reload, images will not display (the `<img>` tag is saved but the file must be served by ComfyUI).
 - The generating placeholder may not appear on some versions of SillyTavern. This is a cosmetic limitation with no impact on functionality.
 - Only one `[[IMG: ... ]]` marker per message is processed.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---
+
+## FAQ
+
+### How do I find my checkpoint filename in ComfyUI?
+
+Open your ComfyUI root folder and navigate to `ComfyUI/models/checkpoints`. The filenames of the models in that folder are exactly what you need to paste into ComfyInject's Checkpoint field, including the file extension (e.g. `waiIllustriousSDXL_v160.safetensors`).
+
+Alternatively, open ComfyUI, load any workflow, and find the Load Checkpoint node. Click the dropdown on that node and you'll see a list of all your available models. Note down whichever one you want and type it exactly into ComfyInject's Checkpoint field.
+
+If the checkpoints folder is empty, you'll need to download a model first. SD1.5 is a good beginner friendly starting point. You can find models on Hugging Face or Civitai. Once downloaded, drop it into the checkpoints folder and restart ComfyUI. 
+
+---
+
+### How is this different from ST's built in image generation?
+
+ST's built in image generation builds the prompt itself from the chat context — the LLM has no awareness of the image at all. It also requires a Chat Completion API with function calling enabled, so text completion users can't use it.
+
+With ComfyInject the LLM writes the image prompt directly into its response, controls the framing and seed, and can reference its own previous images for visual continuity via the outbound interceptor. It works with any backend and any LLM that can follow structured output instructions.
+
+---
+
+### Can I use my own custom workflow?
+
+Yes! Export your workflow from ComfyUI using Save (API format), replace the relevant values with ComfyInject's placeholder strings, and save it to the `workflows/` folder. See `workflows/README.md` for the full list of placeholders and instructions. ComfyInject only touches the nodes where you place its placeholders — everything else in your workflow stays exactly as you have it.
+
+---
+
+### Does it work with text completion backends?
+
+Yes! The marker approach works with any LLM that can follow structured output instructions regardless of backend. The outbound interceptor replaces injected images with a compact text token containing the original prompt and seed, so even non vision models can reference previous images for continuity.
+
+---
+
+### Why isn't my image generating?
+
+A few things to check:
+- Make sure ComfyUI is running and `--enable-cors-header` is enabled
+- Make sure the Checkpoint field in ComfyInject's settings matches your model filename exactly, including the file extension
+- Check the browser console for any error messages from ComfyInject
+- Make sure your LLM is outputting the marker in the correct format — see the [Marker Format](#marker-format) section
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
 
