@@ -241,6 +241,15 @@
 
                 <hr class="sysHR" />
 
+                <!-- Max Poll Attempts -->
+                <div class="flex-container flexGap5 alignItemsCenter">
+                    <label for="comfyinject_max_poll_attempts">Max Poll Attempts</label>
+                    <input id="comfyinject_max_poll_attempts" type="number" class="text_pole" min="1" max="600" step="1" />
+                </div>
+                <small>How many times to poll ComfyUI (1 second apart) before giving up. Default: 180 (3 minutes).</small>
+
+                <hr class="sysHR" />
+
                 <!-- Reset Button -->
                 <div class="flex-container flexGap5">
                     <input id="comfyinject_reset" class="menu_button" type="submit" value="Reset Advanced to Defaults" />

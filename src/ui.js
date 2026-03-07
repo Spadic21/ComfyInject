@@ -133,6 +133,7 @@ function populateUI() {
     $("#comfyinject_sampler").val(settings.sampler);
     $("#comfyinject_scheduler").val(settings.scheduler);
     $("#comfyinject_denoise").val(settings.denoise);
+    $("#comfyinject_max_poll_attempts").val(settings.max_poll_attempts);
 
     // Resolution lock
     $("#comfyinject_resolution_lock_enabled").prop("checked", settings.resolution_lock_enabled);
@@ -317,6 +318,12 @@ function wireEvents() {
     // Denoise
     $("#comfyinject_denoise").on("input", function () {
         getSettings().denoise = parseFloat($(this).val());
+        saveSettings();
+    });
+
+    // Max poll attempts
+    $("#comfyinject_max_poll_attempts").on("input", function () {
+        getSettings().max_poll_attempts = parseInt($(this).val(), 10);
         saveSettings();
     });
 

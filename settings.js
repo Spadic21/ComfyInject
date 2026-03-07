@@ -36,6 +36,10 @@ export const defaultSettings = Object.freeze({
     scheduler: "normal",
     denoise: 1.0,
 
+    // --- Polling ---
+    // Maximum number of 1-second polls before giving up on an image.
+    max_poll_attempts: 180,
+
     // --- Aspect Ratio Resolutions ---
     // Width x Height in pixels for each AR token the LLM can use.
     resolutions: {

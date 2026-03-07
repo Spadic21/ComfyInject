@@ -3,9 +3,8 @@ import { resolveSeed } from "./state.js";
 
 const EXTENSION_FOLDER = `scripts/extensions/third-party/ComfyInject`;
 
-// How long to wait between polls (ms) and how many times to try before giving up
-const POLL_INTERVAL_MS = 1500;
-const POLL_MAX_ATTEMPTS = 60; // 90 seconds max
+// How long to wait between polls (ms)
+const POLL_INTERVAL_MS = 1000;
 
 /**
  * Gets the current ComfyInject settings from SillyTavern's extension settings.
@@ -82,10 +81,11 @@ async function submitPrompt(workflow, host) {
  * Polls /history/{prompt_id} until the image is ready or we time out.
  * @param {string} promptId - The prompt_id from submitPrompt
  * @param {string} host - ComfyUI host URL
+ * @param {number} maxAttempts - Maximum number of poll attempts before giving up
  * @returns {Promise<{filename: string, subfolder: string}>} The filename and subfolder of the generated image
  */
-async function pollForResult(promptId, host) {
-    for (let attempt = 0; attempt < POLL_MAX_ATTEMPTS; attempt++) {
+async function pollForResult(promptId, host, maxAttempts) {
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
         await new Promise(resolve => setTimeout(resolve, POLL_INTERVAL_MS));
 
         const response = await fetch(`${host}/history/${promptId}`);
@@ -106,7 +106,7 @@ async function pollForResult(promptId, host) {
         }
     }
 
-    throw new Error(`[ComfyInject] Timed out waiting for image after ${POLL_MAX_ATTEMPTS} attempts`);
+    throw new Error(`[ComfyInject] Timed out waiting for image after ${maxAttempts} attempts`);
 }
 
 /**
@@ -179,7 +179,8 @@ export async function generateImage({ prompt, ar, shot, seed, messageIndex, bypa
     const promptId = await submitPrompt(filled, settings.comfy_host);
     console.log(`[ComfyInject] Job submitted, prompt_id: ${promptId}`);
 
-    const { filename, subfolder } = await pollForResult(promptId, settings.comfy_host);
+    const maxAttempts = settings.max_poll_attempts ?? 180;
+    const { filename, subfolder } = await pollForResult(promptId, settings.comfy_host, maxAttempts);
     console.log(`[ComfyInject] Image ready: ${filename}`);
 
     const imageUrl = buildImageUrl(filename, subfolder, settings.comfy_host);
