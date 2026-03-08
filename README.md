@@ -165,6 +165,16 @@ All settings are available in the Extensions panel in SillyTavern under **ComfyI
 |---|---|
 | `Shot Tags` | Danbooru tags prepended to the prompt for each SHOT token. Fully customizable. |
 
+### Marker Defaults
+
+| Setting | Description |
+|---|---|
+| `Default AR` | Fallback AR when marker AR is missing/invalid. Can be `RANDOM` or a fixed AR token. |
+| `Default SHOT` | Fallback SHOT when marker SHOT is missing/invalid. Can be `RANDOM` or a fixed SHOT token. |
+| `Default SEED` | Fallback SEED when marker SEED is missing/invalid. Modes: `RANDOM`, `LOCK`, or `CUSTOM` integer. |
+
+When `Lock Seed` is enabled, it still takes precedence over marker/default SEED behavior.
+
 > **Note for SDXL users:** Default resolutions are SD1.5 sized (512px). Bump them up — e.g. PORTRAIT to 832x1216.
 
 To reset all advanced settings back to defaults while keeping your host, checkpoint, and workflow, press the **Reset Advanced to Defaults** button at the bottom of the Advanced Settings panel.
@@ -182,6 +192,12 @@ Instruct your LLM to output image markers using this exact format:
 ```
 
 Multiple markers per message are supported — each one generates a separate image.
+
+ComfyInject uses a lenient parser:
+- Missing AR/SHOT/SEED fields are auto-filled from **Marker Defaults**.
+- AR/SHOT/SEED can be out of order and are detected by token type.
+- Duplicate AR/SHOT/SEED fields keep the first value and ignore later duplicates.
+- The only parser hard-fail is an empty prompt, shown as `[Image marker invalid: empty prompt]`.
 
 ### Segments
 

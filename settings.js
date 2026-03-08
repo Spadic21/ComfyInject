@@ -66,6 +66,13 @@ export const defaultSettings = Object.freeze({
     seed_lock_mode: "RANDOM",
     seed_lock_value: 0,
 
+    // --- Marker Defaults ---
+    // Used when marker segments are missing or out-of-order.
+    // AR/SHOT accept RANDOM plus valid tokens; SEED accepts RANDOM, LOCK, or integer.
+    default_ar: "RANDOM",
+    default_shot: "RANDOM",
+    default_seed: "RANDOM",
+
     // --- Shot Tags ---
     // Danbooru-style tags prepended to the positive prompt for each SHOT token.
     // Edit these to match your model's preferred framing vocabulary.

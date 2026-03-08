@@ -137,11 +137,14 @@ async function processMessage(index) {
     // Replace each marker with its image tag (or error), one at a time
     const metadataArray = [];
     for (const result of results) {
-        if (result) {
+        if (result?.status === "ok") {
             const { imageUrl, seed, prompt, ar, shot, promptId, filename, effectiveAr, effectiveShot, resolution, shotTags } = result;
             const imgTag = buildImgTag(imageUrl, prompt, seed);
             message.mes = message.mes.replace(MARKER_REGEX, imgTag);
             metadataArray.push({ seed, ar, shot, promptId, filename, effectiveAr, effectiveShot, resolution, shotTags });
+        } else if (result?.status === "parse_error") {
+            message.mes = message.mes.replace(MARKER_REGEX, `<span class="comfyinject-error">[Image marker invalid: empty prompt]</span>`);
+            metadataArray.push(null);
         } else {
             // Generation failed for this marker — replace with error text
             message.mes = message.mes.replace(MARKER_REGEX, `<span class="comfyinject-error">[Image generation failed]</span>`);
