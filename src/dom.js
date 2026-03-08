@@ -143,7 +143,20 @@ async function processMessage(index) {
             message.mes = message.mes.replace(MARKER_REGEX, imgTag);
             metadataArray.push({ seed, ar, shot, promptId, filename, effectiveAr, effectiveShot, resolution, shotTags });
         } else if (result?.status === "parse_error") {
-            message.mes = message.mes.replace(MARKER_REGEX, `<span class="comfyinject-error">[Image marker invalid: empty prompt]</span>`);
+            const reason = result?.reason;
+            let errorText;
+            switch (reason) {
+                case "empty_prompt":
+                    errorText = "[Image marker invalid: empty prompt]";
+                    break;
+                case "unknown":
+                    errorText = "[Image marker invalid: unknown parse error]";
+                    break;
+                default:
+                    errorText = "[Image marker invalid]";
+                    break;
+            }
+            message.mes = message.mes.replace(MARKER_REGEX, `<span class="comfyinject-error">${errorText}</span>`);
             metadataArray.push(null);
         } else {
             // Generation failed for this marker — replace with error text
