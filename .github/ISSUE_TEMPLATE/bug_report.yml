@@ -1,0 +1,71 @@
+name: Bug report
+description: Report a problem with ComfyInject itself
+title: "[Bug]: "
+labels: ["bug"]
+
+body:
+
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ If your issue only happens when using a **custom ComfyUI workflow**, please use the **Workflow Help** template instead.
+
+  - type: checkboxes
+    attributes:
+      label: Pre-Issue Checklist
+      description: Confirm the following before submitting
+      options:
+        - label: I am using **SillyTavern 1.16.0 or newer**
+          required: true
+        - label: This issue is **NOT caused by a custom workflow**
+          required: true
+        - label: I read the README and FAQ
+          required: true
+
+  - type: input
+    id: st_version
+    attributes:
+      label: SillyTavern Version
+      placeholder: e.g. 1.16.0
+    validations:
+      required: true
+
+  - type: input
+    id: comfyui_host
+    attributes:
+      label: ComfyUI Host
+      placeholder: e.g. http://127.0.0.1:8188
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Describe the bug
+      description: What happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Send message
+        2. Image generation starts
+        3. Error occurs
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Browser Console Errors
+      description: Press F12 → Console tab in your browser and paste errors here
+      render: shell
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Screenshots of extension settings, gallery, or chat help debugging

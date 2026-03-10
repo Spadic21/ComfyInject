@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: ComfyInject Documentation
+    url: https://github.com/Spadic21/ComfyInject#readme
+    about: Please read the README and FAQ before opening an issue

@@ -1,0 +1,68 @@
+name: Workflow Help
+description: Problems with custom ComfyUI workflows
+title: "[Workflow]: "
+labels: ["workflow"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This template is for **custom ComfyUI workflow issues**, not extension bugs.
+
+        Use this if the issue only happens with a custom workflow, LoRA workflow, custom nodes, or placeholder setup.
+
+  - type: checkboxes
+    attributes:
+      label: Checklist
+      options:
+        - label: I am using **SillyTavern 1.16.0 or newer**
+          required: true
+        - label: ComfyUI is running and reachable
+          required: true
+        - label: I tested this with the workflow I am attaching below
+          required: true
+
+  - type: input
+    id: st_version
+    attributes:
+      label: SillyTavern Version
+      placeholder: e.g. 1.16.0
+    validations:
+      required: true
+
+  - type: input
+    id: comfyui_host
+    attributes:
+      label: ComfyUI Host
+      placeholder: e.g. http://127.0.0.1:8188
+    validations:
+      required: true
+
+  - type: upload
+    id: workflow_file
+    attributes:
+      label: Workflow JSON
+      description: Upload the workflow JSON file you are using with ComfyInject
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue
+    attributes:
+      label: Describe the issue
+      description: What is going wrong when using this workflow?
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Console / ComfyUI Errors
+      description: Paste any errors from the browser console or ComfyUI terminal
+      render: shell
+
+  - type: upload
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Upload screenshots of the workflow, extension settings, gallery, or chat if helpful
