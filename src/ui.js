@@ -117,6 +117,14 @@ function updateSeedLockUI(locked) {
 }
 
 /**
+ * Shows or hides marker default custom seed input based on selected mode.
+ * @param {string} mode - RANDOM, LOCK, or CUSTOM
+ */
+function updateDefaultSeedUI(mode) {
+    $("#comfyinject_default_seed_custom_input").toggle(mode === "CUSTOM");
+}
+
+/**
  * Populates all input fields from current settings.
  */
 function populateUI() {
@@ -187,6 +195,16 @@ function populateUI() {
     $("#comfyinject_seed_lock_mode").val(settings.seed_lock_mode);
     $("#comfyinject_seed_lock_value").val(settings.seed_lock_value);
     updateSeedLockUI(settings.seed_lock_enabled);
+
+    // Marker defaults
+    $("#comfyinject_default_ar").val(settings.default_ar || "RANDOM");
+    $("#comfyinject_default_shot").val(settings.default_shot || "RANDOM");
+
+    const defaultSeed = settings.default_seed ?? "RANDOM";
+    const defaultSeedMode = /^\d+$/.test(String(defaultSeed)) ? "CUSTOM" : String(defaultSeed).toUpperCase();
+    $("#comfyinject_default_seed_mode").val(defaultSeedMode);
+    $("#comfyinject_default_seed_value").val(defaultSeedMode === "CUSTOM" ? parseInt(defaultSeed, 10) : 0);
+    updateDefaultSeedUI(defaultSeedMode);
 
     // Populate shot tags
     const shotContainer = $("#comfyinject_shot_tags");
@@ -407,6 +425,11 @@ function wireEvents() {
         $("#comfyinject_seed_lock_block").toggle();
     });
 
+    // Marker defaults toggle
+    $("#comfyinject_marker_defaults_toggle").on("click", function () {
+        $("#comfyinject_marker_defaults_block").toggle();
+    });
+
     // Seed lock — toggle
     $("#comfyinject_seed_lock_enabled").on("change", function () {
         const locked = $(this).prop("checked");
@@ -426,6 +449,41 @@ function wireEvents() {
     // Seed lock — custom value
     $("#comfyinject_seed_lock_value").on("input", function () {
         getSettings().seed_lock_value = parseInt($(this).val(), 10);
+        saveSettings();
+    });
+
+    // Marker defaults — AR
+    $("#comfyinject_default_ar").on("change", function () {
+        getSettings().default_ar = $(this).val();
+        saveSettings();
+    });
+
+    // Marker defaults — SHOT
+    $("#comfyinject_default_shot").on("change", function () {
+        getSettings().default_shot = $(this).val();
+        saveSettings();
+    });
+
+    // Marker defaults — SEED mode
+    $("#comfyinject_default_seed_mode").on("change", function () {
+        const mode = $(this).val();
+        updateDefaultSeedUI(mode);
+
+        if (mode === "CUSTOM") {
+            const currentVal = parseInt($("#comfyinject_default_seed_value").val(), 10);
+            getSettings().default_seed = Number.isFinite(currentVal) ? currentVal : 0;
+        } else {
+            getSettings().default_seed = mode;
+        }
+
+        saveSettings();
+    });
+
+    // Marker defaults — custom seed value
+    $("#comfyinject_default_seed_value").on("input", function () {
+        if ($("#comfyinject_default_seed_mode").val() !== "CUSTOM") return;
+        const val = parseInt($(this).val(), 10);
+        getSettings().default_seed = Number.isFinite(val) ? val : 0;
         saveSettings();
     });
 
