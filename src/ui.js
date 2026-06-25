@@ -26,14 +26,26 @@ function saveSettings() {
  */
 async function fetchCheckpoints() {
     const settings = getSettings();
+    const ret = []
     try {
-        const response = await fetch(`${settings.comfy_host}/object_info/CheckpointLoaderSimple`);
-        if (!response.ok) return [];
-        const data = await response.json();
-        return data?.CheckpointLoaderSimple?.input?.required?.ckpt_name?.[0] ?? [];
+        const ckpt_response = await fetch(`${settings.comfy_host}/object_info/CheckpointLoaderSimple`);
+        if (ckpt_response.ok) {
+            const ckpt_data = await ckpt_response.json();
+            ret.push(
+                ...(ckpt_data?.CheckpointLoaderSimple?.input?.required?.ckpt_name?.[0] ?? [])
+            );
+        }
+        const unet_response = await fetch(`${settings.comfy_host}/object_info/UNETLoader`);
+        if (unet_response.ok) {
+            const unet_data = await unet_response.json();
+            ret.push(
+                ...(unet_data?.UNETLoader?.input?.required?.unet_name?.[0] ?? [])
+            );
+        }
     } catch (err) {
         return [];
     }
+    return ret
 }
 
 /**
