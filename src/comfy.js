@@ -39,10 +39,17 @@ async function loadWorkflow() {
  */
 function fillWorkflow(workflow, values) {
     let workflowStr = JSON.stringify(workflow);
-
     for (const [key, value] of Object.entries(values)) {
-        const placeholder = `"{{${key}}}"`;
-        const replacement = JSON.stringify(value);
+        let placeholder;
+        let replacement;
+        if (typeof value === "string") {
+            placeholder = `{{${key}}}`;
+            replacement = JSON.stringify(value).slice(1, -1);
+        }
+        else {
+            placeholder = `"{{${key}}}"`;
+            replacement = JSON.stringify(value);
+        }
         while (workflowStr.includes(placeholder)) {
             workflowStr = workflowStr.replace(placeholder, replacement);
         }
