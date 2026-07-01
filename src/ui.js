@@ -31,52 +31,55 @@ async function fetchCheckpoints() {
         if (!response.ok) return [];
         const data = await response.json();
         return data?.CheckpointLoaderSimple?.input?.required?.ckpt_name?.[0] ?? [];
-    } catch (err) {
+    } catch {
         return [];
     }
 }
 
 /**
- * Validates that a workflow file exists in the workflows folder.
- * Shows a toastr error if the file doesn't exist, success if it does.
- * @param {string} filename - The workflow filename to validate
+ * Populates the checkpoint <select> from ComfyUI API.
+ * Falls back to a text input if ComfyUI is unreachable.
  */
-async function validateWorkflow(filename) {
-    if (!filename || !filename.trim()) return;
-    try {
-        const response = await fetch(`/${EXTENSION_FOLDER}/workflows/${filename.trim()}`, { method: "HEAD" });
-        if (response.ok) {
-            toastr.success(`Workflow "${filename}" found!`, "ComfyInject");
-        } else {
-            toastr.error(`Workflow "${filename}" not found in the workflows folder.`, "ComfyInject");
+async function populateCheckpoints() {
+    const select = $("#comfyinject_checkpoint");
+    const current = getSettings().checkpoint;
+    const checkpoints = await fetchCheckpoints();
+
+    if (checkpoints.length > 0) {
+        select.empty();
+        for (const name of checkpoints) {
+            select.append(`<option value="${name}" ${name === current ? "selected" : ""}>${name}</option>`);
         }
-    } catch (err) {
-        toastr.error(`Could not check workflow file.`, "ComfyInject");
+        if (!checkpoints.includes(current) && current) {
+            select.append(`<option value="${current}" selected>${current}</option>`);
+        }
+    } else {
+        // Fallback: show current value as editable text
+        select.empty();
+        select.append(`<option value="${current || ''}" selected>${current || '-- ComfyUI unreachable --'}</option>`);
     }
 }
 
 /**
- * Fetches checkpoints from ComfyUI and populates the dropdown.
- * Called on init and when the arrow button is clicked.
- * @param {boolean} [showToast=true] - Whether to show a toast notification
+ * Fetches the workflow index and populates the <select>.
  */
-async function refreshCheckpointList(showToast = true) {
-    const checkpoints = await fetchCheckpoints();
-    const dropdown = $("#comfyinject_checkpoint_dropdown");
-    dropdown.empty();
+async function populateWorkflows() {
+    const select = $("#comfyinject_workflow");
+    const current = getSettings().workflow;
 
-    if (checkpoints.length > 0) {
-        const current = getSettings().checkpoint;
-        for (const name of checkpoints) {
-            dropdown.append(
-                `<div class="comfyinject-checkpoint-option" data-value="${name}" style="padding: 6px 10px; cursor: pointer; ${name === current ? "font-weight: bold;" : ""}">${name}</div>`
-            );
+    try {
+        const response = await fetch(`/${EXTENSION_FOLDER}/workflows/index.json`);
+        const workflows = await response.json();
+        select.empty();
+        for (const name of workflows) {
+            select.append(`<option value="${name}" ${name === current ? "selected" : ""}>${name}</option>`);
         }
-        if (showToast) {
-            toastr.success(`Found ${checkpoints.length} checkpoint(s)`, "ComfyInject");
+        if (!workflows.includes(current) && current) {
+            select.append(`<option value="${current}" selected>${current}</option>`);
         }
-    } else if (showToast) {
-        toastr.warning("Could not reach ComfyUI. Is it running?", "ComfyInject");
+    } catch {
+        select.empty();
+        select.append(`<option value="${current || ''}" selected>${current || '-- No workflows found --'}</option>`);
     }
 }
 
@@ -220,61 +223,16 @@ function wireEvents() {
         saveSettings();
     });
 
-    // Checkpoint — text input
-    $("#comfyinject_checkpoint").on("input", function () {
+    // Checkpoint — select
+    $("#comfyinject_checkpoint").on("change", function () {
         getSettings().checkpoint = $(this).val();
         saveSettings();
     });
 
-    // Checkpoint — arrow button toggles dropdown
-    $("#comfyinject_checkpoint_arrow").on("click", function () {
-        const dropdown = $("#comfyinject_checkpoint_dropdown");
-        if (dropdown.children().length === 0) {
-            // No checkpoints fetched yet — trigger a fetch
-            refreshCheckpointList(true).then(() => {
-                if ($("#comfyinject_checkpoint_dropdown").children().length > 0) {
-                    dropdown.show();
-                }
-            });
-        } else {
-            dropdown.toggle();
-        }
-    });
-
-    // Checkpoint — clicking an option fills the text input and closes the dropdown
-    $("#comfyinject_checkpoint_dropdown").on("click", ".comfyinject-checkpoint-option", function () {
-        const value = $(this).data("value");
-        $("#comfyinject_checkpoint").val(value);
-        getSettings().checkpoint = value;
-        saveSettings();
-        $("#comfyinject_checkpoint_dropdown").hide();
-    });
-
-    // Checkpoint — hover highlight
-    $("#comfyinject_checkpoint_dropdown").on("mouseenter", ".comfyinject-checkpoint-option", function () {
-        $(this).css("background", "var(--SmartThemeQuoteColor)");
-    }).on("mouseleave", ".comfyinject-checkpoint-option", function () {
-        $(this).css("background", "");
-    });
-
-    // Close dropdown when clicking outside
-    $(document).on("click", function (e) {
-        if (!$(e.target).closest("#comfyinject_checkpoint_arrow, #comfyinject_checkpoint_dropdown").length) {
-            $("#comfyinject_checkpoint_dropdown").hide();
-        }
-    });
-
-    // Workflow — debounced validation after typing stops
-    let workflowValidateTimer = null;
-    $("#comfyinject_workflow").on("input", function () {
+    // Workflow — select
+    $("#comfyinject_workflow").on("change", function () {
         getSettings().workflow = $(this).val();
         saveSettings();
-
-        // Debounce — validate 1.5s after the user stops typing
-        clearTimeout(workflowValidateTimer);
-        workflowValidateTimer = setTimeout(() => {
-            validateWorkflow($(this).val());
-        }, 1500);
     });
 
     // Negative prompt
@@ -470,6 +428,7 @@ export async function initUI() {
     populateUI();
     wireEvents();
 
-    // Silently try to populate the checkpoint list on load — no toast if ComfyUI isn't running
-    refreshCheckpointList(false);
+    // Populate checkpoint and workflow dropdowns
+    populateCheckpoints();
+    populateWorkflows();
 }

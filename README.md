@@ -2,6 +2,15 @@
 
 # ComfyInject
 
+** This is just a minor modification of https://github.com/Spadic21/ComfyInject to introduce:
+
+- Placeholders for CHAR_AVATAR and USER_AVATAR - I just didn't get what I was looking for, so now optional placeholders can be used (note you need to include those properly in your workflow).
+- A minor change so the ComfyInject model can be chosen via select, instead of a textfield.
+
+And that's it **
+
+*************************************************************************************************************
+
 A SillyTavern extension that automatically generates images from `[[IMG: ... ]]` markers in bot messages using your local ComfyUI instance.
 
 When your LLM outputs a marker, ComfyInject intercepts it, sends the prompt to ComfyUI, and replaces the marker with the generated image, all without leaving the chat. Multiple images per message are supported. Images are saved permanently into the chat history and survive page reloads. Outbound prompts sent to the LLM replace injected images with a compact token so the model maintains visual continuity across the conversation.

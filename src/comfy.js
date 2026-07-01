@@ -1,5 +1,12 @@
 import { MODULE_NAME } from "../settings.js";
 import { resolveSeed } from "./state.js";
+import {
+    formatCharacterAvatar,
+    getCharacterAvatar,
+    user_avatar,
+    getUserAvatar,
+} from '../../../../../script.js';
+import { getBase64Async } from '../../../../utils.js';
 
 const EXTENSION_FOLDER = `scripts/extensions/third-party/ComfyInject`;
 
@@ -122,6 +129,69 @@ function buildImageUrl(filename, subfolder, host) {
 }
 
 /**
+ * Gets the active character's avatar URL (or group fallback).
+ */
+function getCharacterAvatarUrl() {
+    const context = SillyTavern.getContext();
+    if (context.groupId) {
+        const groupMembers = context.groups.find(x => x.id === context.groupId)?.members;
+        const lastMessageAvatar = context.chat?.filter(x => !x.is_system && !x.is_user)?.slice(-1)[0]?.original_avatar;
+        const randomMemberAvatar = Array.isArray(groupMembers) ? groupMembers[Math.floor(Math.random() * groupMembers.length)] : null;
+        const avatarToUse = lastMessageAvatar || randomMemberAvatar;
+        return formatCharacterAvatar(avatarToUse);
+    } else {
+        return getCharacterAvatar(context.characterId);
+    }
+}
+
+/**
+ * Gets the active user's avatar URL.
+ */
+function getUserAvatarUrl() {
+    return getUserAvatar(user_avatar);
+}
+
+/**
+ * Fetch avatar image and return as base64 string.
+ * @param {string} url - URL of the avatar to fetch
+ * @returns {Promise<string>} Base64-encoded image data
+ */
+async function fetchAvatarAsBase64(url) {
+    if (!url) return "";
+    const response = await fetch(url);
+    if (!response.ok) return "";
+    const blob = await response.blob();
+    const dataUrl = await getBase64Async(blob);
+    return dataUrl.split(",")[1] || "";
+}
+
+/**
+ * Fetch character avatar for {{CHAR_AVATAR}} placeholder.
+ * @returns {Promise<string>}
+ */
+async function fetchCharacterAvatar() {
+    try {
+        return await fetchAvatarAsBase64(getCharacterAvatarUrl());
+    } catch (e) {
+        console.warn("[ComfyInject] Error fetching character avatar:", e);
+        return "";
+    }
+}
+
+/**
+ * Fetch user avatar for {{USER_AVATAR}} placeholder.
+ * @returns {Promise<string>}
+ */
+async function fetchUserAvatar() {
+    try {
+        return await fetchAvatarAsBase64(getUserAvatarUrl());
+    } catch (e) {
+        console.warn("[ComfyInject] Error fetching user avatar:", e);
+        return "";
+    }
+}
+
+/**
  * Main entry point. Takes parsed marker data and returns a usable image URL.
  * @param {object} params
  * @param {string} params.prompt - The positive prompt text
@@ -159,8 +229,13 @@ export async function generateImage({ prompt, ar, shot, seed, messageIndex, bypa
         ? resolveSeed(settings.seed_lock_mode === "CUSTOM" ? settings.seed_lock_value : settings.seed_lock_mode, messageIndex)
         : seed;
 
-    // Load and fill the workflow
-    const workflow = await loadWorkflow();
+    // Load workflow and avatars in parallel
+    const [workflow, charAvatar, userAvatar] = await Promise.all([
+        loadWorkflow(),
+        fetchCharacterAvatar().catch(() => ""),
+        fetchUserAvatar().catch(() => ""),
+    ]);
+
     const filled = fillWorkflow(workflow, {
         CHECKPOINT:       settings.checkpoint,
         POSITIVE_PROMPT:  positivePrompt,
@@ -173,6 +248,8 @@ export async function generateImage({ prompt, ar, shot, seed, messageIndex, bypa
         SAMPLER:          settings.sampler,
         SCHEDULER:        settings.scheduler,
         DENOISE:          settings.denoise,
+        CHAR_AVATAR:      charAvatar,
+        USER_AVATAR:      userAvatar,
     });
 
     // Submit to ComfyUI and wait for the result

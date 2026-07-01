@@ -13,26 +13,19 @@
             </div>
 
             <!-- Checkpoint -->
-            <div>
+            <div class="flex-container flexGap5 alignItemsCenter">
                 <label for="comfyinject_checkpoint">Checkpoint</label>
-                <div style="position: relative; margin-top: 4px;">
-                    <div class="flex-container flexGap5 alignItemsCenter">
-                        <input id="comfyinject_checkpoint" type="text" class="text_pole" placeholder="your_model.safetensors" style="flex: 1;" />
-                        <div id="comfyinject_checkpoint_arrow" class="menu_button" title="Show available checkpoints" style="padding: 2px 8px; cursor: pointer;">
-                            <i class="fa-solid fa-caret-down"></i>
-                        </div>
-                    </div>
-                    <div id="comfyinject_checkpoint_dropdown" style="display: none; position: absolute; z-index: 999; width: 100%; max-height: 200px; overflow-y: auto; background: var(--SmartThemeBlurTintColor); border: 1px solid var(--SmartThemeBorderColor); border-radius: 4px; margin-top: 2px;">
-                        <!-- Populated by ui.js -->
-                    </div>
-                </div>
+                <select id="comfyinject_checkpoint" class="text_pole">
+                    <option value="">-- Fetching checkpoints --</option>
+                </select>
             </div>
 
             <!-- Workflow -->
-            <div>
+            <div class="flex-container flexGap5 alignItemsCenter">
                 <label for="comfyinject_workflow">Workflow</label>
-                <small style="display: block; margin-bottom: 4px;">Filename of the workflow JSON in the workflows folder.</small>
-                <input id="comfyinject_workflow" type="text" class="text_pole" placeholder="comfyinject_default.json" />
+                <select id="comfyinject_workflow" class="text_pole">
+                    <option value="">-- Select workflow --</option>
+                </select>
             </div>
 
             <hr class="sysHR" />
